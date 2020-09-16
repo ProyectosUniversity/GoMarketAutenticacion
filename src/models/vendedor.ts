@@ -1,15 +1,25 @@
 import {model,Schema, Document} from 'mongoose';
 import bcrypt from 'bcrypt';
 //Interfaz 
-export interface ICliente extends Document{
+export interface IVendedor extends Document{
    nombre: string,
+   codigo: string,
+   puesto: string,
    email: string,
    password: string,
    comparePassword: (password:string)=> Promise<boolean>
 }
-//Esquema de Clientes
-const clienteSchema =new Schema({
+//Esquema de Vendedor
+const vendedorSchema =new Schema({
     nombre: {
+        type: String,
+        required: true
+    },
+    codigo: {
+        type: String,
+        required: true
+    },
+    puesto: {
         type: String,
         required: true
     },
@@ -26,18 +36,18 @@ const clienteSchema =new Schema({
     }
 });
 //Encriptar password
-clienteSchema.pre<ICliente>('save',async function (next) {
-    const cliente= this;
-    if(!cliente.isModified('password')) return next();
+vendedorSchema.pre<IVendedor>('save',async function (next) {
+    const vendedor= this;
+    if(!vendedor.isModified('password')) return next();
 
    const salt= await bcrypt.genSalt(10);
-   const hash= await bcrypt.hash(cliente.password, salt);
-   cliente.password = hash;
+   const hash= await bcrypt.hash(vendedor.password, salt);
+   vendedor.password = hash;
    next();
 });
 //comparar si la contraseña ingresada es igual a la de la que esta en la BD
-clienteSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
+vendedorSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
         return await  bcrypt.compare(password, this.password);  
 };
 
-export default model<ICliente>('Cliente',clienteSchema);
+export default model<IVendedor>('Vendedor',vendedorSchema);

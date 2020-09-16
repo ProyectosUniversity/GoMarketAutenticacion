@@ -1,31 +1,31 @@
 import {Request, Response, request} from 'express';
-import Cliente,{ICliente} from '../models/cliente';
+import Vendedor,{IVendedor} from '../models/vendedor';
 import jwt from 'jsonwebtoken';
 import config from '../config/config'; 
 
 //Crear token
-function crearToken(cliente: ICliente) {
-    return jwt.sign({id: cliente.id,email: cliente.email},config.jwtSecret,{
+function crearToken(vendedor: IVendedor) {
+    return jwt.sign({id: vendedor.id,email: vendedor.email},config.jwtSecret,{
         expiresIn:8640
     });
 }
 
 //Registro
 export const registro= async (req: Request, res: Response): Promise<Response> =>{
-    if(!req.body.nombre ||!req.body.email || !req.body.password){
+    if(!req.body.nombre || !req.body.codigo || !req.body.puesto || !req.body.email || !req.body.password){
         return res.status(400).json({msg:'Por favor, llene todos sus datos correctamente.'})
     }
     
-    const cliente=await Cliente.findOne({email: req.body.email});
-    console.log(cliente);   
-    if(cliente){
+    const vendedor=await Vendedor.findOne({email: req.body.email});
+    console.log(vendedor);   
+    if(vendedor){
         return res.status(400).json({msg: "El usuario ya existe."});
     }
 
-    const nuevoCliente= new Cliente(req.body);
-    await nuevoCliente.save();
+    const nuevovendedor= new Vendedor(req.body);
+    await nuevovendedor.save();
 
-    return res.status(201).json(nuevoCliente);
+    return res.status(201).json(nuevovendedor);
 }
 
 //Login
@@ -34,16 +34,16 @@ export const login=async (req: Request, res: Response)=>{
         return res.status(400).json({msg:'Por favor, coloca un correo y una contraseña.'})
     }
 
-    const cliente =await Cliente.findOne({email: req.body.email});
+    const vendedor =await Vendedor.findOne({email: req.body.email});
 
-    if(!cliente){
+    if(!vendedor){
         return res.status(400).json({msg: 'El usuario ya esta existe'});
     }
 
-    const isMatch= await cliente.comparePassword(req.body.password) 
+    const isMatch= await vendedor.comparePassword(req.body.password) 
 
     if(isMatch){
-        return res.status(200).json({token: crearToken(cliente)});
+        return res.status(200).json({token: crearToken(vendedor)});
     }
 
     return res.status(400).json({

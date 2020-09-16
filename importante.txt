@@ -1,0 +1,5 @@
+Actualziar repositorio
+
+git remote add origin https://github.com/ProyectosUniversity/GoMarketAutenticacion.git
+git branch -M master
+git push -u origin master
