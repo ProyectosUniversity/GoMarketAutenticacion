@@ -3,7 +3,7 @@ const router= Router();
 
 import {registro,login}  from '../controllers/cliente.controller'
 
-router.post('/registro',registro);
-router.post('/login',login);
+router.post('/api/registro',registro);
+router.post('/api/login',login);
 
 export default router;
