@@ -11,26 +11,34 @@ export interface IVendedor extends Document{
 }
 //Esquema de Vendedor
 const vendedorSchema =new Schema({
-    nombre: {
+    nombres: {
         type: String,
-        required: true
+        required: true,
+        trim:true
+    },
+    apellidos: {
+        type:String,
+        required:true,
+        trim:true
     },
     codigo: {
         type: String,
-        required: true
+        required: true,
+        unique:true
     },
     puesto: {
         type: String,
-        required: true
+        required: true,
+        unique:true
     },
-    email: {
+    correo: {
         type: String,
         unique: true,
         required:true,
         lowercase:true,
         trim:true
     },
-    password: {
+    contraseña: {
         type: String,
         required:true
     }
