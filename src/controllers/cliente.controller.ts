@@ -37,7 +37,7 @@ export const login=async (req: Request, res: Response)=>{
     const cliente =await Cliente.findOne({email: req.body.email});
 
     if(!cliente){
-        return res.status(400).json({msg: 'El usuario ya esta existe'});
+        return res.status(400).json({msg: 'El usuario no esta existe'});
     }
 
     const isMatch= await cliente.comparePassword(req.body.password) 
